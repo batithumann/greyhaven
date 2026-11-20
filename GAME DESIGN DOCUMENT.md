@@ -1,440 +1,353 @@
-# GAME DESIGN DOCUMENT
-## Project: [Working title TBD]
-**Version:** 0.1 — Initial Concept  
-**Genre:** 2D top-down adventure / exploration / strategy  
-**Platform:** Web browser (desktop-first)  
-**Engine:** Phaser + TypeScript  
-**Visual direction:** Modern pixel art inspired by the 1990s
+# Greyhaven — Game Design Document
+
+**Version:** 0.2  
+**Status:** Living design document  
+**Genre:** Top-down adventure, mystery and survival  
+**Primary inspiration:** Agent USA (Atari 8-bit)
 
 ---
 
-# 1. Game vision
+## 1. Game vision
 
-### High concept
+Greyhaven is a top-down adventure game inspired by *Agent USA*, combining railway travel, mysterious towns, information gathering and an evolving sense of danger.
 
-A mysterious phenomenon is spreading throughout a fictional country, transforming its inhabitants and disrupting everyday life.
+The player explores a fictional country connected by railways, travelling between towns, meeting inhabitants and uncovering clues about an unsettling mystery.
 
-You play as an independent field agent tasked with investigating the phenomenon, discovering its origin and finding a way to stop it before the entire country is affected.
+The game emphasizes freedom of movement, meaningful destinations and the experience of navigating a connected world.
 
-Travel is primarily done through an extensive railway network connecting towns, cities and remote locations. Along the way, you explore unfamiliar places, meet inhabitants, collect resources, investigate strange occurrences and uncover fragments of a much larger mystery.
+### Gameplay priorities
 
-The world continues to evolve while you play. Cities can become contaminated, railway connections can become dangerous, and events may unfold while you're somewhere else.
+1. **Adventure and progression** — The primary motivation is travelling, discovering information and making progress through the world.
+2. **Tension and survival** — Danger and uncertainty will eventually make travel decisions more consequential.
+3. **Exploration and discovery** — An important supporting activity, without requiring extensive exploration of large maps.
 
-Every journey should feel like an adventure, and every new location should offer the possibility of discovering something unexpected.
+### Core design pillars
 
-### Design philosophy
+- **The railway is the heart of the game.** Trains are an essential part of the experience, not merely fast travel.
+- **Every town matters.** Each destination should offer distinctive information, characters or experiences.
+- **Mystery encourages progression.** The player begins with a reason to investigate but does not know the full story.
+- **Freedom within a connected world.** Players can choose among reachable destinations rather than following a strictly linear route.
+- **Simple mechanics with room to grow.** Early systems should be understandable and extensible.
 
-The game should preserve the sense of curiosity, exploration and mystery that made Agent USA memorable, while introducing a deeper world simulation and more modern gameplay systems.
+---
 
-We want players to feel that:
+## 2. Setting and atmosphere
 
-- The world exists independently of them.
-- They don't know everything about what's happening.
-- Exploring is rewarding, even when it doesn't directly advance the main objective.
-- Time and transportation matter.
-- Their decisions have consequences.
-- Every new playthrough offers opportunities for different discoveries.
+Greyhaven takes place in a fictional country with interconnected towns, railway stations and distinctive regions.
 
-# 2. Setting and atmosphere
+The world has a broadly 1990s-inspired identity, although the exact historical and technological setting remains open.
 
-### Time period
+The atmosphere should feel mysterious and occasionally unsettling, without making every location overtly dangerous.
 
-The game takes place in an alternate version of the 1990s.
+### Narrative approach
 
-This is an intentional aesthetic and technological choice.
+The player begins with an initial objective or lead that provides direction.
 
-The world should feel familiar but slightly disconnected from ours. Technology exists, but information doesn't travel instantly. Communication depends on landlines, radio broadcasts, newspapers, public terminals and physical documents.
+The larger mystery unfolds gradually through:
 
-This reinforces the mystery and makes exploration important.
+- Conversations with inhabitants.
+- Notices, documents and environmental clues.
+- Information discovered in different towns.
+- Connections between seemingly unrelated events.
 
-### The country
+The initial version will not require a complete narrative campaign. A small, coherent mystery spanning several towns is sufficient.
 
-The game takes place in a fictional country with its own geography, cities, history and culture.
+---
 
-The country should contain several distinct regions:
+## 3. Visual direction
 
-- Large metropolitan areas.
-- Small industrial towns.
-- Rural communities.
-- Coastal settlements.
-- Mountain regions.
-- Forests and remote wilderness.
-- Abandoned industrial and research facilities.
+### Art style
 
-Each region should have its own architectural style, environmental characteristics, inhabitants and potential discoveries.
+**Confirmed:** A modern interpretation of original Game Boy pixel art.
 
-### Atmosphere
+The game will use compact sprites, readable environments, restrained palettes and pixel-art presentation, while allowing more artistic freedom than the original hardware.
 
-The overall tone should combine:
+The visual style should preserve the nostalgic feel of early handheld and Atari-era games without strictly reproducing their technical limitations.
 
-- Nostalgia.
-- Curiosity.
-- Mystery.
-- Occasional tension.
-- A sense of isolation.
-- Moments of warmth and humor.
+### Movement
 
-The world shouldn't feel constantly dark or threatening. Normal life should still exist, even as the phenomenon spreads.
+**Confirmed:** Continuous, free movement inspired by Agent USA.
 
-# 3. Core gameplay pillars
+Although environments may be built from tiles, characters will not be restricted to moving one tile at a time.
 
-### Exploration
+The player can move and stop freely, with collision detection preventing movement through solid obstacles.
 
-Players explore towns, buildings and surrounding environments from a top-down perspective.
+### Initial visual implementation
 
-Locations contain characters, objects, clues, resources and secrets. Not every discovery needs to be directly related to the main story.
+Proposed starting conventions:
 
-### Railway transportation
+- 16×16 pixel world tiles.
+- A compact player sprite, approximately 16×16 pixels.
+- Pixel-perfect scaling without texture smoothing.
+- A camera following the player.
+- Simple directional character animations.
+- Dialogue boxes inspired by classic handheld RPGs.
 
-Trains are the primary means of transportation between cities.
+These dimensions are implementation starting points, not permanent restrictions.
 
-The railway network is a fundamental part of the gameplay, not simply a fast-travel system.
+---
 
-Players must understand the network, plan journeys, consider travel time and react to changing conditions.
+## 4. Towns and exploration
 
-### Investigation
+Towns should be compact, handcrafted environments.
 
-The central mystery is revealed gradually.
+The player should be able to reach important locations without excessive walking.
 
-Players gather information from inhabitants, documents, research facilities, radio broadcasts and environmental clues.
+A town may contain:
 
-Information should sometimes be incomplete, contradictory or misleading.
+- A railway station and ticket office.
+- A small number of buildings and landmarks.
+- Stationary NPCs.
+- Noticeboards, documents or other interactive objects.
+- Clues that connect to other destinations.
 
-### Living world
+### Town design principle
 
-The phenomenon evolves over time.
+Every town should contribute something meaningful to the player's journey.
 
-Cities have their own state, populations react to events, and the world can change even when the player is elsewhere.
+Different towns should have recognizable identities and reasons to visit, even if their maps are relatively small.
 
-### Resource management
+For the initial version, handcrafted layouts take priority over procedural generation.
 
-Players collect and manage resources that help them investigate, survive and influence the world.
+---
 
-Resources should create meaningful decisions without turning the game into a complicated survival simulator.
+## 5. Player interactions
 
-# 4. Core gameplay loop
+Interactions will use a classic top-down adventure approach.
 
-The intended gameplay loop is:
+The player moves freely, faces an NPC or object, and presses an interaction button.
 
-1. Discover a clue, event or objective.
-2. Identify a location that might provide more information.
-3. Consult the railway network and plan a journey.
-4. Travel to the destination.
-5. Explore the location and interact with its inhabitants.
-6. Discover clues, resources or unexpected events.
-7. Make decisions that influence the world.
-8. Return to the investigation with new information.
-9. Repeat, as the phenomenon continues to evolve.
+### Initial behavior
 
-The loop should encourage curiosity rather than simply sending players from one predefined mission to another.
+- Interactions are directional rather than automatically selecting the nearest object.
+- NPC dialogue appears in a traditional dialogue box.
+- Conversations are short and primarily provide clues, hints or atmosphere.
+- NPCs remain in fixed positions.
+- Objects such as notices, ticket counters and documents can be inspected.
 
-# 5. Main gameplay systems
+Complex dialogue trees, branching relationships and NPC schedules are deferred.
 
-### 5.1 Player and exploration
+---
 
-The player moves freely through environments using directional controls.
+## 6. Railway system
 
-Initial requirements:
-- Eight-direction movement.
-- Collision with environmental objects.
-- Interactions with NPCs and objects.
-- Collectible items.
-- Entering and exiting buildings.
-- Contextual interaction prompts.
+The railway is the primary transportation system and a defining feature of Greyhaven.
 
-The player should be able to explore locations without following a predetermined path.
+### 6.1 Railway network
 
-### 5.2 Railway network
+**Confirmed:** An open network connecting nearby towns.
 
-The railway system connects the country's settlements.
+Players can choose among destinations reachable from their current location.
 
-Each city is a node in a network, and each railway connection represents a possible route.
+Not every town needs a direct connection to every other town. Some journeys may require transfers.
 
-Initial requirements:
-- A world map displaying discovered cities and connections.
-- Train stations as interaction points.
-- Travel between connected cities.
-- Travel time.
-- Dynamic availability of routes.
-- Visual indicators of dangerous or disrupted routes.
+Gradual route unlocking remains a possible future design choice, but the first version should prioritize open travel.
 
-The railway network should eventually support multiple train lines, transfer stations and special routes.
+### 6.2 Tickets
 
-Trains should feel like physical transportation within the world, even if the initial implementation uses a simplified travel interface.
+**Confirmed:** Tickets are initially free.
 
-### 5.3 Time and world simulation
+The player visits a ticket office and selects an available destination, similar to Agent USA.
 
-The world operates in real time.
+The system should support future ticket prices or other requirements without implementing them now.
 
-Time advances while the player explores, travels and interacts with the environment.
+### 6.3 Timetables
 
-The simulation tracks:
-- Current game time.
-- City conditions.
-- Phenomenon progression.
-- Scheduled events.
-- NPC and environmental changes.
+**Confirmed:** Trains follow fixed schedules.
 
-The simulation should be based on discrete updates rather than calculating every world event on every rendered frame.
+Trains arrive and depart at specific times according to the game-world clock.
 
-The game should also support saving and restoring world state.
+Players must plan around departures and may need to wait at stations.
 
-### 5.4 The phenomenon
+Missing a train means waiting for another suitable departure.
 
-The central threat is an unexplained phenomenon that spreads throughout the country.
+This waiting period is an intentional gameplay mechanic. Later, dangerous towns may turn waiting into a survival challenge.
 
-Its exact nature, origin and purpose are initially unknown.
+### 6.4 Boarding
 
-Each city has a contamination level that influences its condition.
+The player must obtain a ticket and board the appropriate train while it is at the station.
 
-Potential consequences:
-- Changes in NPC behavior.
-- Environmental visual effects.
-- Disrupted infrastructure.
-- Restricted locations.
-- New types of encounters.
-- Changes in railway availability.
+The precise boarding interaction, train dwell time and handling of missed departures remain to be designed.
 
-The phenomenon should have discoverable rules, but players shouldn't understand those rules immediately.
+### 6.5 Train journeys
 
-### 5.5 Resources and inventory
+**Confirmed:** Visible, animated journeys.
 
-Players collect resources throughout their journey.
+After boarding, the player sees a short pixel-art sequence showing the train travelling through the world.
 
-Possible categories:
-- Research materials.
-- Protective equipment.
-- Information and documents.
-- Special objects related to the phenomenon.
-- Consumable supplies.
+The journey ends with arrival at the destination station.
 
-Resources should unlock new investigative possibilities and help players manage dangerous situations.
+For the first version, journeys do not require player interaction.
 
-The original game's collectible crystal concept can inspire an original resource mechanic, without necessarily reproducing it directly.
+Future versions may allow movement inside trains, conversations with passengers and events during travel.
 
-### 5.6 Investigation and discovery
+### 6.6 Time simulation
 
-The player maintains a journal containing:
-- Discovered locations.
-- Important characters.
-- Collected clues.
-- Research findings.
-- Unanswered questions.
-- Known information about the phenomenon.
+The railway requires a shared game-world clock.
 
-The journal should help players connect discoveries without automatically revealing every answer.
+Schedules and train states should be represented independently of their visual appearance.
 
-# 6. Procedural generation and roguelike direction
+This separation will allow future systems, such as town events and infection progression, to depend on the same simulation.
 
-Procedural generation is a planned long-term feature, not a requirement for the first playable prototype.
+The exact duration of a game day and the relationship between real time and game time are undecided.
 
-The intention is to make each new game generate a different country.
+---
 
-Potential procedural elements:
+## 7. Initial gameplay loop
 
-- Randomly positioned towns and cities.
-- Different railway layouts.
-- Variable terrain and regional characteristics.
-- Randomized points of interest.
-- Different NPCs and discoveries.
-- Different starting conditions.
-- Variations in the phenomenon's initial location and behavior.
+1. Arrive in a town.
+2. Explore a small number of relevant locations.
+3. Speak to NPCs and inspect clues.
+4. Identify a destination worth visiting.
+5. Obtain a free ticket at the ticket office.
+6. Consult the timetable and wait for the train.
+7. Board the train.
+8. Watch the journey and arrive in another town.
+9. Continue investigating the mystery.
 
-### Important design principle
+This loop should be enjoyable even before danger or survival mechanics are introduced.
 
-Procedural generation should create interesting situations, not just random geography.
+---
 
-For example, a new game might generate:
-- A large city surrounded by several small towns.
-- A remote research facility accessible through a single railway connection.
-- An isolated coastal settlement with important information.
-- A heavily contaminated industrial region.
-- A railway junction connecting otherwise distant regions.
+## 8. First playable version — Railway Journey
 
-The generated world should always be geographically and logically coherent.
+### Objective
 
-### Future architecture
+Create a small but functional interconnected world where the player can travel by train, explore different towns and gather information.
 
-The world generator should produce structured game data:
+### Initial scope
 
-- World configuration.
-- Regions.
-- Settlements.
-- Railway connections.
-- Points of interest.
-- Initial contamination.
-- Important characters and discoveries.
+**First implementation milestone:**
 
-The game engine should consume that data independently of how the world was generated.
+- Two handcrafted towns.
+- Continuous player movement and collision.
+- Basic Game Boy-inspired pixel-art presentation.
+- Directional interactions and dialogue boxes.
+- Ticket offices with free destination selection.
+- A shared game clock.
+- Fixed train schedules.
+- Train arrival, boarding and departure.
+- A short animated train journey.
+- Arrival in the destination town.
 
-This will allow handcrafted maps and procedurally generated maps to coexist.
+**Expansion of the first playable version:**
 
-# 7. Visual and audio direction
+- Three or four meaningful towns.
+- A small railway network with multiple destination choices.
+- Distinctive NPCs and clues in each town.
+- A simple mystery connecting the locations.
+- Basic tracking of discovered information.
 
-### Visuals
+### Success criteria
 
-Modern pixel art with a 1990s-inspired identity.
+The first version is successful when a player can:
 
-Characteristics:
-- Top-down perspective.
-- Detailed environments.
-- Expressive character sprites.
-- Smooth movement and animations.
-- Rich but controlled color palettes.
-- Atmospheric lighting.
-- Different visual identities for each region.
+- Start in one town.
+- Discover information suggesting another destination.
+- Obtain a ticket.
+- Wait for and board a scheduled train.
+- Watch the train travel.
+- Arrive in a different town.
+- Discover new information.
+- Continue travelling through the railway network.
 
-The goal is a recognizable retro aesthetic with the polish and readability of a modern indie game.
+The player should experience the beginning of a genuine adventure rather than a collection of disconnected technical demonstrations.
 
-### Audio
+---
 
-Audio should reinforce the atmosphere.
+## 9. Technical architecture
 
-Potential elements:
-- Ambient environmental sounds.
-- Train engines and railway sounds.
-- Town-specific background ambience.
-- Radio broadcasts.
-- Mysterious electronic sound effects.
-- Original retro-inspired soundtrack.
+### Technology
 
-The soundtrack should balance exploration, nostalgia and occasional tension.
-
-# 8. Initial playable prototype (MVP)
-
-The first playable version should be intentionally small.
-
-### World
-
-- One handcrafted region.
-- Four connected towns.
-- One larger central settlement.
-- A small railway network.
-- A handful of buildings and points of interest.
-
-### Player
-
-- Basic movement.
-- Collision detection.
-- Interactions.
-- Resource collection.
-
-### Railway
-
-- Station interactions.
-- Travel between connected towns.
-- Basic travel-time simulation.
-- Simple world map.
-
-### Simulation
-
-- A functioning game clock.
-- Contamination levels for each town.
-- Basic contamination progression.
-- One or two events triggered by time.
-
-### Investigation
-
-- A small mystery.
-- A few NPCs.
-- Collectible clues.
-- One research location.
-- A basic journal.
-
-### Completion criteria
-
-The prototype is successful when a player can:
-
-1. Start a new game.
-2. Explore a town.
-3. Discover information about the phenomenon.
-4. Travel to another town by train.
-5. Collect resources and interact with characters.
-6. Observe changes in the world over time.
-7. Complete a small investigative objective.
-
-The prototype doesn't need a complete story or a fully developed country.
-
-# 9. Technical direction
-
-### Technology stack
-
-- **Phaser:** 2D rendering, game loop, input, animation, camera and scene management.
-- **React:** Menus, HUD, inventory, journal and other application-level interfaces.
-- **TypeScript:** Game systems and domain logic.
-- **Vite:** Development and build tooling.
-- **Jest:** Unit testing.
-- **Tiled:** Map creation and editing.
+- **Phaser:** World rendering, movement, collisions, camera, animation and scene management.
+- **React:** Application interface, menus and supporting UI.
+- **TypeScript:** Game and application logic.
+- **Jest:** Automated tests for independent game-domain logic.
+- **Tiled:** Potential map editor for handcrafted environments.
 
 ### Architectural principles
 
-1. Separate game rules from rendering.
-2. Keep world state independent from Phaser scenes.
-3. Model the railway network as a graph.
-4. Model the world as structured, serializable data.
-5. Make simulation updates deterministic where possible.
-6. Support saving and restoring game state.
-7. Keep procedural generation separate from world simulation.
+- Keep game rules separate from rendering.
+- Represent towns, railway connections and schedules as structured data.
+- Maintain a consistent world state across scene transitions.
+- Avoid coupling railway simulation to a particular Phaser scene.
+- Design systems so they can eventually support saving and loading.
+- Prefer incremental implementation over premature abstraction.
 
-### Initial high-level architecture
+### Important domain concepts
 
-- Domain: Cities, characters, resources, player state and game rules.
-- World: Geography, maps, railway network and locations.
-- Simulation: Time, contamination and events.
-- Gameplay: Player movement, interactions and exploration.
-- Presentation: Phaser scenes, sprites, animation and sound.
-- Application: React interface and persistence.
+Likely concepts include:
 
-# 10. Development roadmap
+- World
+- Town
+- Railway connection
+- Train
+- Timetable
+- Ticket
+- Player state
+- Dialogue
+- Clue or discovery
 
-**Milestone 1 — Technical foundation**
-- Set up Phaser and React.
-- Implement the game container.
-- Establish the game loop.
-- Create a basic testable domain model.
-
-**Milestone 2 — Exploration**
-- Create the first town.
-- Implement player movement and collision.
-- Add buildings, NPCs and interactions.
-
-**Milestone 3 — Transportation**
-- Create the railway graph.
-- Implement stations and train travel.
-- Introduce the world map.
-
-**Milestone 4 — Simulation**
-- Introduce game time.
-- Implement city states.
-- Introduce the phenomenon and its progression.
-
-**Milestone 5 — Investigation**
-- Implement clues and journal.
-- Add an investigative objective.
-- Connect exploration, transportation and simulation.
-
-**Milestone 6 — Prototype polish**
-- Add original art and animations.
-- Introduce sound.
-- Improve UI and feedback.
-- Playtest the complete gameplay loop.
-
-**Future milestone — Procedural worlds**
-- Develop world generation.
-- Generate settlements and railway networks.
-- Introduce randomized starting conditions.
-- Ensure generated worlds are playable and interesting.
+These are conceptual responsibilities, not a commitment to create a separate class for each one.
 
 ---
 
-# 11. Design principles to protect throughout development
+## 10. Future possibilities
 
-1. **Mystery over exposition:** Let players discover the world rather than explaining everything immediately.
-2. **Meaningful exploration:** Every location should have the potential to reward curiosity.
-3. **A living world:** The player should never feel like the only thing happening in the country.
-4. **Transportation matters:** Railway travel should be an important strategic decision.
-5. **Readable complexity:** Deep systems should remain understandable through good feedback and interfaces.
-6. **Replayability:** Future procedural generation should create meaningful variations, not arbitrary randomness.
-7. **Small but complete increments:** Each development milestone should produce something playable.
+The following ideas remain part of Greyhaven's longer-term vision but are **not requirements for the first playable version**.
 
-**End of document — Version 0.1**
+### Infection and survival
+
+- Infection spreading between towns.
+- Increasing danger in affected locations.
+- Enemies reacting to the player.
+- Surviving while waiting for trains.
+- Escaping dangerous towns under time pressure.
+
+### Advanced railway gameplay
+
+- Interactive train interiors.
+- Conversations and encounters during journeys.
+- Boarding without tickets.
+- Ticket inspections and consequences.
+- Alternative travel conditions.
+
+### World generation
+
+- Procedurally generated town locations.
+- Railway networks with varying layouts.
+- Different regional characteristics.
+- Replayable world configurations.
+
+Procedural generation should eventually create meaningful journeys and situations, not simply random geography.
+
+---
+
+## 11. Open design questions
+
+The following decisions can be made as development progresses:
+
+- What motivates the player to begin investigating?
+- What is the central mystery?
+- What is the game's time scale?
+- How long should players typically wait for a train?
+- How frequently should trains run?
+- How does the player recognize the correct train?
+- How should the railway network be displayed?
+- How should discovered information be recorded?
+- What happens when the player completes the initial mystery?
+- When should survival mechanics enter the experience?
+
+These questions should not block development of the railway prototype.
+
+---
+
+## 12. Development philosophy
+
+Greyhaven should evolve through small, playable milestones.
+
+Each milestone should add a meaningful part of the intended experience rather than introducing complexity for its own sake.
+
+The game should remain faithful to the qualities that make Agent USA memorable while developing its own identity through atmosphere, narrative, visual presentation and world design.
+
+**The guiding principle: make travelling through Greyhaven interesting before making it dangerous.**
