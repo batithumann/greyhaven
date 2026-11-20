@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
-import Phaser from 'phaser';
-import type { GameSnapshot } from '../app/App';
-import { TownScene } from './scenes/TownScene';
+import Phaser from "phaser";
+import { useEffect, useRef } from "react";
+import type { GameSnapshot } from "../app/App";
+import { TownScene } from "./scenes/TownScene";
 
 type Props = { onSnapshot: (snapshot: GameSnapshot) => void };
 
@@ -12,17 +12,36 @@ export default function PhaserGame({ onSnapshot }: Props) {
 
   useEffect(() => {
     if (!hostRef.current) return;
+
     const game = new Phaser.Game({
       type: Phaser.AUTO,
       parent: hostRef.current,
-      width: 960,
-      height: 600,
-      backgroundColor: '#71836b',
+
+      // Low-resolution game world
+      width: 320,
+      height: 200,
+
+      backgroundColor: "#71836b",
+
+      // Crisp pixel-art rendering
       pixelArt: true,
-      scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-      physics: { default: 'arcade', arcade: { debug: false } },
+      roundPixels: true,
+
+      scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 320,
+        height: 200,
+      },
+
+      physics: {
+        default: "arcade",
+        arcade: { debug: false },
+      },
+
       scene: [new TownScene((snapshot) => callbackRef.current(snapshot))],
     });
+
     return () => game.destroy(true);
   }, []);
 
